@@ -56,7 +56,10 @@ app.get('/bookmarks', async(req, res, next) => {
 })
 app.get('/bookmarks/:category', async(req, res, next) => {
     try{
-        const bookmarks = [await Bookmark.findByPk(req.params.id) ];
+        console.log('ok')
+        const bookmarks = await Bookmark.findAll();
+        const bookmark = await Bookmark.findOne( { where : { category : req.params.category } });
+        console.log(req.params.category);
         res.send(`
         <html>
             <head>
@@ -64,13 +67,9 @@ app.get('/bookmarks/:category', async(req, res, next) => {
             </head>
             <body>
                 <h1>Bookmarks ${ bookmarks.length }</h1>
-                <ul>
-                    ${ bookmarks.map( bookmark => `
-                        <li>
-                            ${ bookmark.site }
-                        </li>
-                        `).join('')}
-                </ul>
+                    <p>
+                    ${bookmark.siteURL} and ${bookmark.category}
+                    </p>
             </body>
         </html>
         `);

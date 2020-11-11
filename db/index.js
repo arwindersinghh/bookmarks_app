@@ -20,11 +20,6 @@ const Bookmark = db.define('Bookmark', {
 
 const syncAndSeed = async () => {
     await db.sync({ force: true });
-    await Bookmark.create({ 
-        site: 'Glassdoor',
-        siteURL: 'https://www.glassdoor.com/index.htm',
-        category: 'job search'
-    });
 };
 
 module.exports = {
