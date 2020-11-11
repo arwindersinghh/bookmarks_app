@@ -25,10 +25,11 @@ app.post('/bookmarks', async(req, res, next) => {
 app.get('/bookmarks', async(req, res, next) => {
     try{
         const bookmarks = await Bookmark.findAll();
+
         res.send(`
         <html>
             <head>
-                <link rel='stylesheet' href='styles.css'>
+                <link rel='stylesheet' href='/styles.css'>
             </head>
             <body>
                 <h1>You have (${ bookmarks.length }) bookmarks </h1>
@@ -38,14 +39,6 @@ app.get('/bookmarks', async(req, res, next) => {
                 <input name='category' placeholder='enter site category...'/> 
                 <button> Save </button>
                 </form>
-                <ul>
-                    ${ bookmarks.map( bookmark => `
-                        <li>
-                        <a href='/bookmarks/${ bookmark.category }'>
-                            ${bookmark.category} (${bookmarks.length})
-                        </li>
-                        `).join('')}
-                </ul>
             </body>
         </html>
         `);
@@ -54,23 +47,32 @@ app.get('/bookmarks', async(req, res, next) => {
         next(ex);
     }
 })
+
 app.get('/bookmarks/:category', async(req, res, next) => {
     try{
-        console.log('ok')
-        const bookmarks = await Bookmark.findAll();
-        const bookmark = await Bookmark.findOne( { where : { category : req.params.category } });
-        console.log(req.params.category);
+        const bookmarks = await Bookmark.findAll({ where : { category : req.params.category } })
+        console.log(bookmarks);
         res.send(`
         <html>
             <head>
-                <link rel='stylesheet' href='styles.css'>
+                <link rel='stylesheet' href='/styles.css'>
             </head>
             <body>
-                <h1>Bookmarks ${ bookmarks.length }</h1>
-                    <p>
-                    ${bookmark.siteURL} and ${bookmark.category}
-                    </p>
-            </body>
+                <h1> Bookmarks (${bookmarks.length}) </h1>
+                <h1> Category: ${req.params.category}</h1>
+                <h1> <a href = '/bookmarks'> Back </a> </h1>
+                ${bookmarks 
+                .map(
+                    (bookmark) => `
+                    <li>
+                    <a href = '${bookmark.siteURL}'>
+                    ${bookmark.site}
+                    </a>
+                    </li>
+                    `
+                ).join('')
+            }
+             </body>
         </html>
         `);
     }

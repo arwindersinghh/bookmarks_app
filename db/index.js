@@ -6,6 +6,7 @@ const Bookmark = db.define('Bookmark', {
     site: {
         type: STRING,
         allowNull: false,
+        unique: true,
         },
     siteURL: {
         type: STRING,
